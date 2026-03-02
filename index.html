@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSLC 2026 – Study Plan</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0f; color: #e8e8f0; font-family: 'Segoe UI', Arial, sans-serif; }
+
+  /* NAV */
+  .nav { position: sticky; top: 0; z-index: 99; background: #0d0d15; border-bottom: 1px solid #1e1e2e; display: flex; overflow-x: auto; }
+  .nav button { padding: 14px 18px; background: none; border: none; border-bottom: 2px solid transparent; color: #6b6b80; cursor: pointer; font-size: 12px; font-family: monospace; letter-spacing: 1px; white-space: nowrap; }
+  .nav button.active { color: #f5c518; border-bottom: 2px solid #f5c518; font-weight: 700; }
+
+  /* HERO */
+  .hero { padding: 40px 24px 32px; background: linear-gradient(135deg, #0a0a0f, #0f0f1e); border-bottom: 1px solid #1e1e2e; }
+  .badge { display: inline-block; background: #f5c518; color: #000; font-size: 10px; font-weight: 700; padding: 3px 12px; letter-spacing: 2px; margin-bottom: 14px; font-family: monospace; }
+  .hero h1 { font-size: clamp(36px, 7vw, 72px); font-weight: 900; line-height: 1; margin-bottom: 12px; }
+  .hero h1 span { color: #f5c518; }
+  .hero p { color: #6b6b80; font-size: 14px; max-width: 600px; line-height: 1.7; margin-bottom: 24px; }
+  .hero-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+  .stat-num { font-size: 38px; font-weight: 900; color: #f5c518; line-height: 1; }
+  .stat-label { font-size: 10px; color: #6b6b80; letter-spacing: 1px; font-family: monospace; text-transform: uppercase; }
+
+  /* SECTIONS */
+  .section { display: none; max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+  .section.active { display: block; }
+  .section-label { font-size: 11px; color: #ff6b2b; letter-spacing: 3px; font-family: monospace; margin-bottom: 8px; }
+  h2 { font-size: 26px; font-weight: 900; margin-bottom: 8px; }
+  .sub-note { color: #6b6b80; font-size: 13px; margin-bottom: 24px; }
+
+  /* ALERT / NOTE BOXES */
+  .alert { background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.3); border-left: 4px solid #ff4757; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; color: #ddd; }
+  .alert strong { color: #ff4757; }
+  .note { background: rgba(245,197,24,0.06); border: 1px solid rgba(245,197,24,0.2); border-left: 4px solid #f5c518; padding: 14px 18px; margin-top: 20px; font-size: 13px; color: #ccc; line-height: 1.7; }
+  .note strong { color: #f5c518; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: #1e1e2e; padding: 12px 16px; text-align: left; font-family: monospace; font-size: 11px; color: #6b6b80; letter-spacing: 1px; text-transform: uppercase; }
+  td { padding: 14px 16px; border-bottom: 1px solid #1e1e2e; vertical-align: middle; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .pill { display: inline-block; padding: 3px 12px; font-size: 12px; font-weight: 700; border-radius: 2px; }
+  .first-exam { font-family: monospace; font-size: 10px; color: #ff4757; letter-spacing: 1px; font-weight: 700; }
+
+  /* PHASE HEADER */
+  .phase-header { display: flex; align-items: center; gap: 12px; margin: 28px 0 14px; flex-wrap: wrap; }
+  .phase-tag { padding: 4px 14px; font-weight: 800; font-size: 13px; letter-spacing: 0.5px; }
+  .phase-desc { color: #6b6b80; font-size: 12px; }
+
+  /* DAY GRID */
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; margin-bottom: 8px; }
+  .day-card { background: #12121a; border: 1px solid #1e1e2e; padding: 18px; position: relative; overflow: hidden; cursor: pointer; transition: border-color 0.2s; }
+  .day-card:hover { border-color: #444; }
+  .day-card .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .day-num { font-family: monospace; font-size: 10px; color: #6b6b80; letter-spacing: 1px; }
+  .day-date { font-size: 15px; font-weight: 800; margin: 2px 0 4px; color: #fff; }
+  .day-subject { font-size: 14px; font-weight: 700; margin-bottom: 0; }
+  .day-tasks { list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .day-tasks li { font-size: 12px; color: #aaa; padding-left: 14px; position: relative; line-height: 1.5; }
+  .day-tasks li::before { content: '→'; position: absolute; left: 0; color: #f5c518; font-size: 10px; top: 1px; }
+  .sessions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 10px; border-top: 1px solid #1e1e2e; }
+  .session-chip { background: rgba(245,197,24,0.1); color: #f5c518; border: 1px solid rgba(245,197,24,0.3); padding: 2px 8px; font-size: 10px; font-family: monospace; }
+  .tag-box { display: inline-block; background: rgba(255,68,87,0.15); color: #ff4757; border: 1px solid rgba(255,68,87,0.3); padding: 1px 8px; font-size: 10px; font-family: monospace; letter-spacing: 1px; margin-bottom: 8px; }
+  .expand-hint { position: absolute; bottom: 8px; right: 12px; font-size: 10px; color: #444; }
+
+  /* TIPS GRID */
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .tip-card { background: #12121a; border: 1px solid #1e1e2e; padding: 22px; position: relative; }
+  .tip-card .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .tip-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .tip-icon { font-size: 24px; }
+  .tip-subject { font-size: 18px; font-weight: 900; }
+  .hot-tag { margin-left: auto; background: rgba(255,68,87,0.15); color: #ff4757; padding: 1px 8px; font-size: 9px; font-family: monospace; letter-spacing: 1px; border: 1px solid rgba(255,68,87,0.3); }
+  .tip-list { list-style: none; }
+  .tip-list li { font-size: 13px; color: #bbb; padding-left: 16px; position: relative; margin-bottom: 10px; line-height: 1.6; }
+  .tip-list li::before { content: '✦'; position: absolute; left: 0; font-size: 8px; top: 5px; }
+
+  /* MARKS GRID */
+  .marks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .marks-card { background: #12121a; border: 1px solid #1e1e2e; padding: 20px; }
+  .marks-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .marks-sub { font-size: 16px; font-weight: 800; }
+  .marks-exam { font-family: monospace; font-size: 11px; color: #6b6b80; }
+  .marks-total { font-family: monospace; font-size: 11px; color: #6b6b80; margin-bottom: 12px; }
+  .bar-wrap { background: #1e1e2e; height: 6px; margin-bottom: 8px; overflow: hidden; }
+  .bar { height: 100%; }
+  .marks-target { font-size: 16px; font-weight: 800; color: #22d3a0; margin-bottom: 4px; }
+  .marks-note { font-size: 12px; color: #888; line-height: 1.5; }
+
+  /* RULES */
+  .rules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .rule-item { background: #12121a; border-left: 3px solid #f5c518; padding: 16px 18px; display: flex; gap: 14px; }
+  .rule-num { font-size: 30px; font-weight: 900; color: #f5c518; line-height: 1; flex-shrink: 0; font-family: monospace; }
+  .rule-title { font-weight: 800; color: #fff; margin-bottom: 4px; }
+  .rule-text { font-size: 13px; color: #aaa; line-height: 1.6; }
+
+  /* ROUTINE */
+  .routine-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; margin-top: 20px; }
+  .routine-block { background: #0d0d15; border: 1px solid #1e1e2e; padding: 14px; }
+  .r-time { font-family: monospace; font-size: 11px; color: #ff6b2b; font-weight: 700; margin-bottom: 3px; }
+  .r-act { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .r-note { font-size: 11px; color: #6b6b80; line-height: 1.5; }
+
+  /* FOOTER */
+  .footer { padding: 32px 24px; text-align: center; border-top: 1px solid #1e1e2e; }
+  .footer-motto { font-size: 26px; font-weight: 900; color: #f5c518; letter-spacing: 2px; margin-bottom: 8px; }
+  .footer-sub { font-family: monospace; font-size: 12px; color: #6b6b80; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">KARNATAKA SSLC 2026 · OFFICIAL TIMETABLE PLAN</div>
+  <h1>SCORE <span>1ST CLASS</span><br>IN 31 DAYS.</h1>
+  <p>Built on your confirmed official timetable. Every day mapped from March 2 through your last exam on April 2. Includes inter-exam sprint plans so you never waste a single gap day.</p>
+  <div class="hero-stats">
+    <div><div class="stat-num">31</div><div class="stat-label">Days Total</div></div>
+    <div><div class="stat-num">6</div><div class="stat-label">Exams</div></div>
+    <div><div class="stat-num">6</div><div class="stat-label">Subjects</div></div>
+    <div><div class="stat-num">72%</div><div class="stat-label">Your Target</div></div>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav">
+  <button class="active" onclick="showTab('timetable', this)">📅 Exam Dates</button>
+  <button onclick="showTab('schedule', this)">📆 Full Schedule</button>
+  <button onclick="showTab('tips', this)">🔥 Subject Tips</button>
+  <button onclick="showTab('marks', this)">🎯 Target Marks</button>
+  <button onclick="showTab('rules', this)">🏅 Rules &amp; Routine</button>
+</div>
+
+<!-- =================== TIMETABLE =================== -->
+<div id="timetable" class="section active">
+  <div class="section-label">01 — OFFICIAL SCHEDULE</div>
+  <h2>YOUR CONFIRMED EXAM TIMETABLE</h2>
+  <p class="sub-note">All exams are 10:15 AM – 1:30 PM. Reach the hall by 9:45 AM.</p>
+  <div class="alert"><strong>⚠ Reminder:</strong> Carry your Hall Ticket + 3 pens (blue/black) + pencil + ruler + eraser to every exam.</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Day</th><th>Subject</th><th>Type</th><th>Days from Mar 2</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>March 18</strong></td><td>Wednesday</td>
+        <td><span class="pill" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3)">Kannada</span></td>
+        <td style="color:#aaa;font-size:13px">1st Language</td>
+        <td><span class="first-exam">◉ FIRST EXAM · 16 days</span></td>
+      </tr>
+      <tr>
+        <td><strong>March 23</strong></td><td>Monday</td>
+        <td><span class="pill" style="background:rgba(34,211,160,0.15);color:#22d3a0;border:1px solid rgba(34,211,160,0.3)">Science</span></td>
+        <td style="color:#aaa;font-size:13px">Physics / Chemistry / Biology</td>
+        <td style="font-family:monospace;font-size:12px;color:#22d3a0;font-weight:700">21 days</td>
+      </tr>
+      <tr>
+        <td><strong>March 25</strong></td><td>Wednesday</td>
+        <td><span class="pill" style="background:rgba(245,197,24,0.15);color:#f5c518;border:1px solid rgba(245,197,24,0.3)">English</span></td>
+        <td style="color:#aaa;font-size:13px">2nd Language</td>
+        <td style="font-family:monospace;font-size:12px;color:#f5c518;font-weight:700">23 days</td>
+      </tr>
+      <tr>
+        <td><strong>March 28</strong></td><td>Saturday</td>
+        <td><span class="pill" style="background:rgba(79,142,247,0.15);color:#4f8ef7;border:1px solid rgba(79,142,247,0.3)">Mathematics</span></td>
+        <td style="color:#aaa;font-size:13px">Core Subject</td>
+        <td style="font-family:monospace;font-size:12px;color:#4f8ef7;font-weight:700">26 days</td>
+      </tr>
+      <tr>
+        <td><strong>March 30</strong></td><td>Monday</td>
+        <td><span class="pill" style="background:rgba(255,71,87,0.15);color:#ff4757;border:1px solid rgba(255,71,87,0.3)">Hindi</span></td>
+        <td style="color:#aaa;font-size:13px">3rd Language</td>
+        <td style="font-family:monospace;font-size:12px;color:#ff4757;font-weight:700">28 days</td>
+      </tr>
+      <tr>
+        <td><strong>April 2</strong></td><td>Thursday</td>
+        <td><span class="pill" style="background:rgba(255,107,43,0.15);color:#ff6b2b;border:1px solid rgba(255,107,43,0.3)">Social Science</span></td>
+        <td style="color:#aaa;font-size:13px">History / Geography / Civics / Eco</td>
+        <td style="font-family:monospace;font-size:12px;color:#ff6b2b;font-weight:700">31 days</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note">
+    <strong>Key insight on your gaps:</strong><br>
+    Kannada → Science: <strong>4 days</strong> (comfortable sprint)<br>
+    Science → English: <strong>2 days</strong> (very tight — needs full focus)<br>
+    English → Maths: <strong>3 days</strong> (manageable)<br>
+    Maths → Hindi: <strong>2 days</strong> (tight — one full sprint day)<br>
+    Hindi → Social Science: <strong>3 days</strong> (enough time)<br>
+    Every gap day is mapped in the Full Schedule tab.
+  </div>
+</div>
+
+<!-- =================== SCHEDULE =================== -->
+<div id="schedule" class="section">
+  <div class="section-label">02 — DAY BY DAY PLAN</div>
+  <h2>COMPLETE 31-DAY SCHEDULE</h2>
+  <p class="sub-note">Click any card to expand and see detailed tasks. Phases 1–3 are pre-exam deep study. Sprint plans cover all inter-exam gaps.</p>
+
+  <!-- PHASE 1 -->
+  <div class="phase-header">
+    <span class="phase-tag" style="background:#4f8ef7;color:#000">PHASE 1</span>
+    <span class="phase-desc">Mar 2–8 · Deep Study Week · Cover all hard chapters</span>
+  </div>
+  <div class="day-grid">
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #a855f7">
+      <div class="day-num">DAY 1</div>
+      <div class="day-date">Sunday, Mar 2</div>
+      <div class="day-subject" style="color:#a855f7">📜 Kannada — Gadya & Padya</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>All Gadya chapters — write 3-line summary + moral for each</li>
+          <li>Padya — read all poems, note poet name + central idea</li>
+          <li>Vyaakarana basics — Sandhi (5 types), Samasa (3 types), make a list</li>
+          <li>Write one full Prabandha on Kannada Bhaasha Mahime from scratch</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #a855f7">
+      <div class="day-num">DAY 2</div>
+      <div class="day-date">Monday, Mar 3</div>
+      <div class="day-subject" style="color:#a855f7">📜 Kannada — Grammar & Writing</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Padya — memorize 2 key poems word-by-word</li>
+          <li>Alankaara — Anuprasa, Yamaka, Upama with examples</li>
+          <li>Patra Lekhana — formal letter format, write 2 sample letters</li>
+          <li>Prepare 2 more Prabandha topics: Parisara + Cricket</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #4f8ef7">
+      <div class="day-num">DAY 3</div>
+      <div class="day-date">Tuesday, Mar 4</div>
+      <div class="day-subject" style="color:#4f8ef7">📐 Mathematics — Algebra</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Quadratic Equations — factorization + formula method, 10 problems</li>
+          <li>AP & GP — nth term + sum formulas, 5 problems each</li>
+          <li>Statistics — Mean, Median, Mode from grouped data (table method)</li>
+          <li>Create one-page MATH FORMULA SHEET — stick on wall tonight</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #4f8ef7">
+      <div class="day-num">DAY 4</div>
+      <div class="day-date">Wednesday, Mar 5</div>
+      <div class="day-subject" style="color:#4f8ef7">📐 Mathematics — Geometry & Trig</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Similar Triangles — Basic Proportionality Theorem proof (write it out)</li>
+          <li>Circles — tangent properties + chord problems (5 of each)</li>
+          <li>Trigonometry — all identities + sin/cos/tan table 0°–90°</li>
+          <li>Surface Areas & Volumes — cylinder + cone combination problems</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #22d3a0">
+      <div class="day-num">DAY 5</div>
+      <div class="day-date">Thursday, Mar 6</div>
+      <div class="day-subject" style="color:#22d3a0">🔬 Science — Physics</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Light — reflection, refraction, lens/mirror formula + ray diagrams</li>
+          <li>Electricity — Ohm's law, series/parallel circuits, 8 numericals</li>
+          <li>Magnetic Effects — Fleming's rule, motor vs generator principle</li>
+          <li>Create SCIENCE FORMULA SHEET — laws, formulae, constants</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #22d3a0">
+      <div class="day-num">DAY 6</div>
+      <div class="day-date">Friday, Mar 7</div>
+      <div class="day-subject" style="color:#22d3a0">🔬 Science — Chemistry & Biology</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Chemical Reactions — types + balance 10 equations from memory</li>
+          <li>Acids, Bases, Salts — pH scale, indicators, common reactions</li>
+          <li>Life Processes — draw & label: digestive system + respiratory system</li>
+          <li>Heredity & Evolution — Mendel's laws + Punnett square basics</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #f5c518">
+      <div class="day-num">DAY 7</div>
+      <div class="day-date">Saturday, Mar 8</div>
+      <div class="day-subject" style="color:#f5c518">📖 English + Hindi</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>English: All 8 prose chapters — 2-line summaries + moral</li>
+          <li>English: All poems — central idea + 1 literary device each</li>
+          <li>English: Grammar — Tenses, Active/Passive, Direct/Indirect speech</li>
+          <li>Hindi: All chapter author names + main themes — make a list</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-header">
+    <span class="phase-tag" style="background:#ff6b2b;color:#000">PHASE 2</span>
+    <span class="phase-desc">Mar 9–15 · Practice Week · Model papers + weak topics</span>
+  </div>
+  <div class="day-grid">
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #a855f7">
+      <div class="day-num">DAY 8</div>
+      <div class="day-date">Sunday, Mar 9</div>
+      <div class="day-subject" style="color:#a855f7">📜 Kannada Model Paper</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Attempt full Kannada model paper — timed 3 hours exactly</li>
+          <li>Circle every wrong answer in red pen</li>
+          <li>Evening: revise ONLY the topics you got wrong</li>
+          <li>Rewrite 5 grammar questions you missed from scratch</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">9 AM–12 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #22d3a0">
+      <div class="day-num">DAY 9</div>
+      <div class="day-date">Monday, Mar 10</div>
+      <div class="day-subject" style="color:#22d3a0">🔬 Science Model Paper</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Attempt full Science model paper — timed 3 hours</li>
+          <li>Draw all 5 diagrams that appeared in the paper (clean + labeled)</li>
+          <li>Rebalance all chemical equations you got wrong</li>
+          <li>Revise all Physics numericals you missed</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">9 AM–12 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #ff6b2b">
+      <div class="day-num">DAY 10</div>
+      <div class="day-date">Tuesday, Mar 11</div>
+      <div class="day-subject" style="color:#ff6b2b">🌍 Social Science — History</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Independence movement — Gandhi's 3 movements + key dates (chart)</li>
+          <li>French Revolution — causes, Bastille Day, Liberty/Equality/Fraternity</li>
+          <li>Karnataka History — Hyder Ali, Tipu Sultan, Unification</li>
+          <li>Civics — All 6 Fundamental Rights + one example each</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #ff6b2b">
+      <div class="day-num">DAY 11</div>
+      <div class="day-date">Wednesday, Mar 12</div>
+      <div class="day-subject" style="color:#ff6b2b">🌍 Social Science — Geography + SS Model Paper</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Blank India map — mark all rivers, mountains, resources (practice daily!)</li>
+          <li>Economics — 3 sectors, GDP definition, HDI, Consumer Rights</li>
+          <li>Attempt full Social Science model paper (timed 3 hours)</li>
+          <li>Review wrong answers + redo map questions</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">9 AM–12 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #f5c518">
+      <div class="day-num">DAY 12</div>
+      <div class="day-date">Thursday, Mar 13</div>
+      <div class="day-subject" style="color:#f5c518">📖 English Deep Dive</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Formal letter — memorize format, write 2 complaint + 2 application letters</li>
+          <li>Essay writing — write 1 full essay timed (25 minutes max)</li>
+          <li>Grammar: 20 MCQ practice — passive voice + reported speech</li>
+          <li>Comprehension: 2 unseen passages + answer all questions in full sentences</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #ff4757">
+      <div class="day-num">DAY 13</div>
+      <div class="day-date">Friday, Mar 14</div>
+      <div class="day-subject" style="color:#ff4757">📘 Hindi</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Write all 3 Nibandhs from memory — Mera Priya Neta, Paryavaran, Swachh Bharat</li>
+          <li>Grammar one-pager: Sandhi, Ling, Vachan — 10 examples each</li>
+          <li>Patra Lekhana — write one formal + one informal letter</li>
+          <li>Poetry — poet names + central themes for all poems</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #6b6b80">
+      <div class="day-num">DAY 14</div>
+      <div class="day-date">Saturday, Mar 15</div>
+      <div class="day-subject" style="color:#aaa">🔁 Full Mixed Revision</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Morning: Read ALL formula sheets wall-to-wall (Math + Science)</li>
+          <li>Go through all red-circled model paper mistakes</li>
+          <li>Afternoon: Kannada grammar list — read 3 times out loud</li>
+          <li>Evening: Teach one topic from each subject to yourself aloud</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–12 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 - Kannada Final -->
+  <div class="phase-header">
+    <span class="phase-tag" style="background:#a855f7;color:#000">PHASE 3</span>
+    <span class="phase-desc">Mar 16–17 · Kannada Final Push · 2 days before first exam</span>
+  </div>
+  <div class="day-grid">
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #a855f7">
+      <div class="day-num">DAY 15</div>
+      <div class="day-date">Sunday, Mar 16</div>
+      <div class="day-subject" style="color:#a855f7">📜 Kannada — FINAL PUSH</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Re-read all Gadya summaries (your notes only — not full textbook)</li>
+          <li>Write model answers for 3 big essay questions (5–6 marks each)</li>
+          <li>Vyaakarana speed drill: 20 Sandhi + 10 Samasa in 30 minutes</li>
+          <li>Prepare 3 essay opening lines with Kannada shlokas/vachanas</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #a855f7">
+      <div class="day-num">DAY 16</div>
+      <div class="day-date">Monday, Mar 17</div>
+      <div class="day-subject" style="color:#a855f7">📜 Kannada — PRE-EXAM DAY</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Light reading ONLY till 10 AM — summaries + grammar sheet</li>
+          <li>Write ONE full essay from memory in exam conditions</li>
+          <li>Pack bag: Hall ticket, 3 pens, pencil, ruler, eraser, water bottle</li>
+          <li>NO studying after noon. Eat well. Sleep by 9:30 PM. Alarm at 7 AM.</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–10 AM ONLY</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+  </div>
+
+  <!-- BETWEEN EXAMS - Science -->
+  <div class="phase-header">
+    <span class="phase-tag" style="background:#22d3a0;color:#000">SCIENCE SPRINT</span>
+    <span class="phase-desc">Mar 19–22 · 4 days after Kannada exam · Before Science (Mar 23)</span>
+  </div>
+  <div class="day-grid">
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #22d3a0">
+      <div class="day-num">DAY 17</div>
+      <div class="day-date">Thursday, Mar 19</div>
+      <div class="tag-box">AFTER KANNADA EXAM</div>
+      <div class="day-subject" style="color:#22d3a0">🔬 Science Sprint — Day 1</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Afternoon rest — you just had an exam. 3 hours off minimum.</li>
+          <li>Evening: Light read through Physics notes — Light + Electricity</li>
+          <li>Rewrite all chemical equations from memory on blank paper</li>
+          <li>Check which Science topics appeared in past 2 years' papers</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">Afternoon onwards</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #22d3a0">
+      <div class="day-num">DAY 18</div>
+      <div class="day-date">Friday, Mar 20</div>
+      <div class="day-subject" style="color:#22d3a0">🔬 Science Sprint — Day 2</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Morning: Biology — all 10 important labeled diagrams (draw each once)</li>
+          <li>Chemistry — Acids/Bases, Carbon compounds, Metals & Non-metals</li>
+          <li>Attempt 2024 Science model paper in 3 hours (timed)</li>
+          <li>Revise only wrong answers — focus on diagram questions</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #22d3a0">
+      <div class="day-num">DAY 19</div>
+      <div class="day-date">Saturday, Mar 21</div>
+      <div class="day-subject" style="color:#22d3a0">🔬 Science Sprint — Day 3</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Full Physics numericals — lens, mirror, electricity (10 each)</li>
+          <li>Biology: Heredity + Evolution + Control & Coordination</li>
+          <li>Read Science formula sheet 3 times slowly</li>
+          <li>Write key definitions: Ohm's law, refraction, photosynthesis, etc.</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #22d3a0">
+      <div class="day-num">DAY 20</div>
+      <div class="day-date">Sunday, Mar 22</div>
+      <div class="day-subject" style="color:#22d3a0">🔬 Science — PRE-EXAM DAY</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Light review ONLY — formula sheet + diagram notes till noon</li>
+          <li>Draw 5 most likely diagrams one final time (clean and labeled)</li>
+          <li>Pack bag. Eat well. Sleep by 9:30 PM.</li>
+          <li>NO studying after noon. Trust your preparation.</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–10 AM ONLY</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+  </div>
+
+  <!-- BETWEEN EXAMS - English -->
+  <div class="phase-header">
+    <span class="phase-tag" style="background:#f5c518;color:#000">ENGLISH SPRINT</span>
+    <span class="phase-desc">Mar 24 · 1 day only after Science exam · Before English (Mar 25)</span>
+  </div>
+  <div class="day-grid">
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #f5c518">
+      <div class="day-num">DAY 21</div>
+      <div class="day-date">Monday, Mar 24</div>
+      <div class="tag-box">AFTER SCIENCE EXAM — TIGHT GAP</div>
+      <div class="day-subject" style="color:#f5c518">📖 English — One Full Day Sprint</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Morning: All prose + poem summaries — quick read through your notes</li>
+          <li>Write ONE formal letter (complaint/application) from memory — time yourself</li>
+          <li>Write ONE full essay timed (25 minutes — descriptive or narrative)</li>
+          <li>Grammar drill: 30 passive voice + reported speech conversions</li>
+          <li>Vocabulary: 10 tough words from previous English papers</li>
+          <li>Sleep by 9:30 PM — exam tomorrow morning!</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–7 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+  </div>
+
+  <!-- BETWEEN EXAMS - Maths -->
+  <div class="phase-header">
+    <span class="phase-tag" style="background:#4f8ef7;color:#000">MATHS SPRINT</span>
+    <span class="phase-desc">Mar 26–27 · 2 days after English exam · Before Mathematics (Mar 28)</span>
+  </div>
+  <div class="day-grid">
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #4f8ef7">
+      <div class="day-num">DAY 22</div>
+      <div class="day-date">Thursday, Mar 26</div>
+      <div class="tag-box">AFTER ENGLISH EXAM</div>
+      <div class="day-subject" style="color:#4f8ef7">📐 Mathematics Sprint — Day 1</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Read full Math formula sheet — 3 slow, careful reads</li>
+          <li>Quadratic Equations — 8 problems (factorization + formula method)</li>
+          <li>AP/GP — 5 problems each type</li>
+          <li>Statistics — 3 full grouped data problems (mean + median + mode)</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">Afternoon onwards</span><span class="session-chip">4–7 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #4f8ef7">
+      <div class="day-num">DAY 23</div>
+      <div class="day-date">Friday, Mar 27</div>
+      <div class="day-subject" style="color:#4f8ef7">📐 Mathematics Sprint — Day 2</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Geometry: Triangle proofs + 5 Circle problems from model paper</li>
+          <li>Trigonometry: Prove 5 identities + 5 application problems</li>
+          <li>Surface Areas & Volumes — 3 combination problems (cylinder+cone)</li>
+          <li>Coordinate Geometry — distance formula + section formula practice</li>
+          <li>Sleep by 9:30 PM. Exam tomorrow. Do NOT try new problems tonight.</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+  </div>
+
+  <!-- BETWEEN EXAMS - Hindi -->
+  <div class="phase-header">
+    <span class="phase-tag" style="background:#ff4757;color:#fff">HINDI SPRINT</span>
+    <span class="phase-desc">Mar 29 · 1 day only after Maths exam · Before Hindi (Mar 30)</span>
+  </div>
+  <div class="day-grid">
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #ff4757">
+      <div class="day-num">DAY 24</div>
+      <div class="day-date">Sunday, Mar 29</div>
+      <div class="tag-box">AFTER MATHS EXAM — TIGHT GAP</div>
+      <div class="day-subject" style="color:#ff4757">📘 Hindi — One Full Day Sprint</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Morning: All chapter summaries + author names — quick read</li>
+          <li>Write 2 Nibandhs from memory — no notes allowed</li>
+          <li>Grammar drill: Sandhi (10), Ling (10), Vachan (10) rapid-fire</li>
+          <li>Write one formal + one informal letter in exam conditions</li>
+          <li>Poetry — poet names + central ideas for all poems, one final time</li>
+          <li>Sleep by 9:30 PM. Exam tomorrow. Write in neat Devanagari.</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–7 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+  </div>
+
+  <!-- BETWEEN EXAMS - Social Science -->
+  <div class="phase-header">
+    <span class="phase-tag" style="background:#ff6b2b;color:#000">SOCIAL SCIENCE SPRINT</span>
+    <span class="phase-desc">Mar 31–Apr 1 · 2 days after Hindi exam · Before Social Science (Apr 2)</span>
+  </div>
+  <div class="day-grid">
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #ff6b2b">
+      <div class="day-num">DAY 25</div>
+      <div class="day-date">Tuesday, Mar 31</div>
+      <div class="tag-box">AFTER HINDI EXAM</div>
+      <div class="day-subject" style="color:#ff6b2b">🌍 Social Science Sprint — Day 1</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>History: Independence movement — Gandhi's 3 movements + dates (write from memory)</li>
+          <li>French Revolution + World Wars — causes + results in 5 points each</li>
+          <li>Karnataka History — Hyder Ali, Tipu Sultan, Unification essay outline</li>
+          <li>Civics: Fundamental Rights (all 6) + Parliament structure</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">Afternoon onwards</span><span class="session-chip">4–7 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+    <div class="day-card" onclick="toggleCard(this)" style="border-top:3px solid #ff6b2b">
+      <div class="day-num">DAY 26</div>
+      <div class="day-date">Wednesday, Apr 1</div>
+      <div class="day-subject" style="color:#ff6b2b">🌍 Social Science Sprint — Day 2</div>
+      <div class="expandable" style="display:none">
+        <ul class="day-tasks">
+          <li>Geography: Blank India map — mark all rivers, passes, resources from memory</li>
+          <li>Mark 15 locations: Ganga, Brahmaputra, Western Ghats, Thar Desert etc.</li>
+          <li>Economics: 3 sectors, GDP, HDI, Consumer Rights — write one line each</li>
+          <li>Final SS model paper — attempt 1 hour under exam conditions</li>
+          <li>Pack bag. Sleep by 9:30 PM. LAST EXAM TOMORROW. You've got this.</li>
+        </ul>
+        <div class="sessions"><span class="session-chip">6–8 AM</span><span class="session-chip">10–1 PM</span><span class="session-chip">4–6 PM</span></div>
+      </div>
+      <div class="expand-hint">▼ tap to expand</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- =================== TIPS =================== -->
+<div id="tips" class="section">
+  <div class="section-label">03 — HIGH-VALUE TOPICS</div>
+  <h2>SUBJECT TIPS & MOST LIKELY EXAM TOPICS</h2>
+  <p class="sub-note">Based on Karnataka SSLC 2023–2025 model papers and preparatory exam patterns. Focus on these first.</p>
+
+  <div class="tips-grid">
+
+    <div class="tip-card">
+      <div class="top-bar" style="background:#a855f7"></div>
+      <div class="tip-head"><span class="tip-icon">📜</span><span class="tip-subject" style="color:#a855f7">Kannada</span><span class="hot-tag">🔥 HOT</span></div>
+      <ul class="tip-list" style="--c:#a855f7">
+        <li style="--c:#a855f7"><span style="position:absolute;left:0;color:#a855f7;font-size:8px;top:5px">✦</span>Gadya essay question (6–8 marks) comes from one chapter's moral/message — prepare every chapter's moral in 2 lines</li>
+        <li><span style="position:absolute;left:0;color:#a855f7;font-size:8px;top:5px">✦</span>Open your essay with a famous Kannada shloka or vachana — examiners give extra marks for this</li>
+        <li><span style="position:absolute;left:0;color:#a855f7;font-size:8px;top:5px">✦</span>Sandhi + Samasa = 4 marks free if you memorize 10 examples of each type</li>
+        <li><span style="position:absolute;left:0;color:#a855f7;font-size:8px;top:5px">✦</span>Padya: You only need 3 things per poem — poet name + difficult word meanings + central idea</li>
+        <li><span style="position:absolute;left:0;color:#a855f7;font-size:8px;top:5px">✦</span>Patra Lekhana: The format alone is worth 2 of 5 marks — learn it once, use it every time</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <div class="top-bar" style="background:#22d3a0"></div>
+      <div class="tip-head"><span class="tip-icon">🔬</span><span class="tip-subject" style="color:#22d3a0">Science</span><span class="hot-tag">🔥 HOT</span></div>
+      <ul class="tip-list">
+        <li><span style="position:absolute;left:0;color:#22d3a0;font-size:8px;top:5px">✦</span>Electricity numericals (Ohm's law, series/parallel resistance) appear EVERY single year — practice 10 of each</li>
+        <li><span style="position:absolute;left:0;color:#22d3a0;font-size:8px;top:5px">✦</span>Light: Draw the ray diagram FIRST, then write the formula — you get marks for both separately</li>
+        <li><span style="position:absolute;left:0;color:#22d3a0;font-size:8px;top:5px">✦</span>Labeled digestive system diagram = almost guaranteed 3 marks — practice until you draw it in 2 minutes</li>
+        <li><span style="position:absolute;left:0;color:#22d3a0;font-size:8px;top:5px">✦</span>Chemical equations: count atoms below each element when balancing — neat, systematic, full marks</li>
+        <li><span style="position:absolute;left:0;color:#22d3a0;font-size:8px;top:5px">✦</span>Mendel's laws + Punnett square = 2–3 easy marks that most students skip and miss</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <div class="top-bar" style="background:#f5c518"></div>
+      <div class="tip-head"><span class="tip-icon">📖</span><span class="tip-subject" style="color:#f5c518">English</span></div>
+      <ul class="tip-list">
+        <li><span style="position:absolute;left:0;color:#f5c518;font-size:8px;top:5px">✦</span>Formal letter = 5 marks just for knowing the format: Address → Date → Subject → Dear Sir/Madam → Body → Yours faithfully</li>
+        <li><span style="position:absolute;left:0;color:#f5c518;font-size:8px;top:5px">✦</span>Start every short-answer with the keyword from the question — examiners scan for this while marking</li>
+        <li><span style="position:absolute;left:0;color:#f5c518;font-size:8px;top:5px">✦</span>Comprehension: Read all questions FIRST, then the passage — saves 5 valuable minutes</li>
+        <li><span style="position:absolute;left:0;color:#f5c518;font-size:8px;top:5px">✦</span>Passive voice rule: Object + is/are/was/were + V3 + (by + subject) — practice 20 conversions</li>
+        <li><span style="position:absolute;left:0;color:#f5c518;font-size:8px;top:5px">✦</span>Essay structure that always scores: 2-line intro + 3 body paragraphs + 2-line conclusion</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <div class="top-bar" style="background:#4f8ef7"></div>
+      <div class="tip-head"><span class="tip-icon">📐</span><span class="tip-subject" style="color:#4f8ef7">Mathematics</span><span class="hot-tag">🔥 HOT</span></div>
+      <ul class="tip-list">
+        <li><span style="position:absolute;left:0;color:#4f8ef7;font-size:8px;top:5px">✦</span>ALWAYS write the formula before substituting values — step marks can save 30–40% of your total Maths score</li>
+        <li><span style="position:absolute;left:0;color:#4f8ef7;font-size:8px;top:5px">✦</span>Statistics (Mean by assumed mean method) appears EVERY year — master the table, guaranteed 4–5 marks</li>
+        <li><span style="position:absolute;left:0;color:#4f8ef7;font-size:8px;top:5px">✦</span>Quadratic formula: x = (−b ± √(b²−4ac)) / 2a — write it from memory 10 times right now</li>
+        <li><span style="position:absolute;left:0;color:#4f8ef7;font-size:8px;top:5px">✦</span>If stuck on a proof: write "Given", "To Prove", "Construction", "Proof" headings — structure earns partial marks</li>
+        <li><span style="position:absolute;left:0;color:#4f8ef7;font-size:8px;top:5px">✦</span>Coordinate Geometry: Distance formula + Section formula = easy 3-mark question every year</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <div class="top-bar" style="background:#ff4757"></div>
+      <div class="tip-head"><span class="tip-icon">📘</span><span class="tip-subject" style="color:#ff4757">Hindi</span></div>
+      <ul class="tip-list">
+        <li><span style="position:absolute;left:0;color:#ff4757;font-size:8px;top:5px">✦</span>Neat Devanagari handwriting in Hindi = easier, more generous marking — slow down and write clearly</li>
+        <li><span style="position:absolute;left:0;color:#ff4757;font-size:8px;top:5px">✦</span>Nibandha structure that always works: Prasthaavana → Vishay Vistar (3 main points) → Upasamhaar</li>
+        <li><span style="position:absolute;left:0;color:#ff4757;font-size:8px;top:5px">✦</span>Grammar: Ling + Vachan + Sandhi = 5 marks if you memorize just 10 examples of each type</li>
+        <li><span style="position:absolute;left:0;color:#ff4757;font-size:8px;top:5px">✦</span>Every chapter question asks: Lekhak ka parichay — know author name + 2 lines about each one</li>
+        <li><span style="position:absolute;left:0;color:#ff4757;font-size:8px;top:5px">✦</span>Patra: Open with "Seva mein" and write "Vishay:" clearly — the format is literally half the marks</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <div class="top-bar" style="background:#ff6b2b"></div>
+      <div class="tip-head"><span class="tip-icon">🌍</span><span class="tip-subject" style="color:#ff6b2b">Social Science</span><span class="hot-tag">🔥 HOT</span></div>
+      <ul class="tip-list">
+        <li><span style="position:absolute;left:0;color:#ff6b2b;font-size:8px;top:5px">✦</span>Map work = 10 marks for just pointing to rivers and cities — easiest marks in the entire exam, practice daily</li>
+        <li><span style="position:absolute;left:0;color:#ff6b2b;font-size:8px;top:5px">✦</span>For EVERY historical event, write: WHEN → WHO → WHY → WHAT HAPPENED → RESULT. Gets full marks every time.</li>
+        <li><span style="position:absolute;left:0;color:#ff6b2b;font-size:8px;top:5px">✦</span>Gandhi's 3 movements: Non-Cooperation (1920), Civil Disobedience (1930), Quit India (1942) — memorize these</li>
+        <li><span style="position:absolute;left:0;color:#ff6b2b;font-size:8px;top:5px">✦</span>Fundamental Rights: All 6 with one example each — appears as a 3-mark question in most years</li>
+        <li><span style="position:absolute;left:0;color:#ff6b2b;font-size:8px;top:5px">✦</span>Economics: Primary (farming), Secondary (manufacturing), Tertiary (services) — know 2 examples of each</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- =================== MARKS =================== -->
+<div id="marks" class="section">
+  <div class="section-label">04 — YOUR TARGET</div>
+  <h2>MARKS TARGET BREAKDOWN</h2>
+  <p class="sub-note">1st Class = 60%+ overall. Distinction = 75%+. Aim for minimum 70% per subject for a safe margin.</p>
+
+  <div class="marks-grid">
+    <div class="marks-card">
+      <div class="marks-head"><div class="marks-sub" style="color:#a855f7">Kannada</div><div class="marks-exam">Mar 18</div></div>
+      <div class="marks-total">Total: 100 marks</div>
+      <div class="bar-wrap"><div class="bar" style="width:75%;background:#a855f7"></div></div>
+      <div class="marks-target">Target: 75/100</div>
+      <div class="marks-note">Essay + letter + grammar = 35 reliable marks just from format and structure</div>
+    </div>
+    <div class="marks-card">
+      <div class="marks-head"><div class="marks-sub" style="color:#22d3a0">Science</div><div class="marks-exam">Mar 23</div></div>
+      <div class="marks-total">Total: 100 marks</div>
+      <div class="bar-wrap"><div class="bar" style="width:72%;background:#22d3a0"></div></div>
+      <div class="marks-target">Target: 72/100</div>
+      <div class="marks-note">Diagrams + numericals alone = 30+ marks if practiced daily</div>
+    </div>
+    <div class="marks-card">
+      <div class="marks-head"><div class="marks-sub" style="color:#f5c518">English</div><div class="marks-exam">Mar 25</div></div>
+      <div class="marks-total">Total: 100 marks</div>
+      <div class="bar-wrap"><div class="bar" style="width:70%;background:#f5c518"></div></div>
+      <div class="marks-target">Target: 70/100</div>
+      <div class="marks-note">Letter + grammar + comprehension = 45 marks with format and rules</div>
+    </div>
+    <div class="marks-card">
+      <div class="marks-head"><div class="marks-sub" style="color:#4f8ef7">Mathematics</div><div class="marks-exam">Mar 28</div></div>
+      <div class="marks-total">Total: 100 marks</div>
+      <div class="bar-wrap"><div class="bar" style="width:70%;background:#4f8ef7"></div></div>
+      <div class="marks-target">Target: 70/100</div>
+      <div class="marks-note">Step marks are critical — even wrong final answers earn 2–3 marks if working is shown</div>
+    </div>
+    <div class="marks-card">
+      <div class="marks-head"><div class="marks-sub" style="color:#ff4757">Hindi</div><div class="marks-exam">Mar 30</div></div>
+      <div class="marks-total">Total: 100 marks</div>
+      <div class="bar-wrap"><div class="bar" style="width:68%;background:#ff4757"></div></div>
+      <div class="marks-target">Target: 68/100</div>
+      <div class="marks-note">Nibandha + patra + grammar = 40 marks with format alone</div>
+    </div>
+    <div class="marks-card">
+      <div class="marks-head"><div class="marks-sub" style="color:#ff6b2b">Social Science</div><div class="marks-exam">Apr 2</div></div>
+      <div class="marks-total">Total: 100 marks</div>
+      <div class="bar-wrap"><div class="bar" style="width:75%;background:#ff6b2b"></div></div>
+      <div class="marks-target">Target: 75/100</div>
+      <div class="marks-note">Map work (10 marks) + history essays = easiest subject to score high in</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Overall Target: 430/600 = 71.7%</strong> = Solid 1st Class with a comfortable margin above the 60% cutoff.<br>
+    Kannada and Social Science are your easiest subjects to over-score in — every extra mark there cushions your Maths score.
+  </div>
+</div>
+
+<!-- =================== RULES & ROUTINE =================== -->
+<div id="rules" class="section">
+  <div class="section-label">05 — NON-NEGOTIABLES</div>
+  <h2>10 GOLDEN RULES TO SCORE 1ST CLASS</h2>
+  <p class="sub-note">Follow all 10. These are not suggestions — they are the difference between 1st class and failing.</p>
+
+  <div class="rules-grid">
+    <div class="rule-item"><div class="rule-num">1</div><div><div class="rule-title">Write, Don't Just Read</div><div class="rule-text">Writing by hand locks knowledge 3× faster than reading. Write every answer at least once — especially Maths steps and Chemistry equations.</div></div></div>
+    <div class="rule-item"><div class="rule-num">2</div><div><div class="rule-title">Formula Sheets on Your Wall</div><div class="rule-text">Make one A4 formula sheet per subject. Stick it eye-level on your wall. Read it every single morning before you start studying.</div></div></div>
+    <div class="rule-item"><div class="rule-num">3</div><div><div class="rule-title">Past Papers Before New Books</div><div class="rule-text">SSLC questions repeat in clear patterns every year. Solving 3 years of model papers will do more for your score than reading new chapters.</div></div></div>
+    <div class="rule-item"><div class="rule-num">4</div><div><div class="rule-title">Sleep 7–8 Hours Every Night</div><div class="rule-text">Memory consolidates during sleep. Studying until 2 AM and sleeping 4 hours will actively reduce your score. Do not sacrifice sleep.</div></div></div>
+    <div class="rule-item"><div class="rule-num">5</div><div><div class="rule-title">Diagrams = Free Marks</div><div class="rule-text">In Science and Social Science, a clean labeled diagram earns 2 of 3 marks even with weak written answers. Practice drawing fast and neat.</div></div></div>
+    <div class="rule-item"><div class="rule-num">6</div><div><div class="rule-title">Never Leave a Question Blank</div><div class="rule-text">Write something for every question in the exam. Even the wrong formula written clearly earns 1 mark. Partial marks add up to a pass.</div></div></div>
+    <div class="rule-item"><div class="rule-num">7</div><div><div class="rule-title">Phone in Another Room</div><div class="rule-text">One notification breaks 20+ minutes of focused concentration. Put your phone in another room. Check it only during scheduled breaks.</div></div></div>
+    <div class="rule-item"><div class="rule-num">8</div><div><div class="rule-title">Eat and Drink for Your Brain</div><div class="rule-text">Water, almonds, banana, eggs, curd. Avoid heavy oily meals before study sessions. Dehydration alone cuts focus by 20%.</div></div></div>
+    <div class="rule-item"><div class="rule-num">9</div><div><div class="rule-title">Teach What You Learned</div><div class="rule-text">After every session, explain the topic out loud — to yourself, a wall, or a friend. If you can teach it clearly, you truly know it.</div></div></div>
+    <div class="rule-item"><div class="rule-num">10</div><div><div class="rule-title">First 10 Minutes of Every Exam</div><div class="rule-text">Read the full paper before writing a single word. Attempt your strongest section first. Budget roughly 30 minutes per section.</div></div></div>
+  </div>
+
+  <h2 style="margin-top:40px;margin-bottom:8px">YOUR DAILY ROUTINE</h2>
+  <p class="sub-note">Follow this structure every day for maximum retention and minimum burnout.</p>
+  <div class="routine-grid">
+    <div class="routine-block"><div class="r-time">5:45 AM</div><div class="r-act">Wake Up</div><div class="r-note">Water + wash face. No phone for 1 hour.</div></div>
+    <div class="routine-block"><div class="r-time">6:00 – 8:00 AM</div><div class="r-act">🧠 Power Session 1</div><div class="r-note">Hardest topic. Brain is sharpest now.</div></div>
+    <div class="routine-block"><div class="r-time">8:00 – 9:00 AM</div><div class="r-act">Breakfast + Break</div><div class="r-note">Eat well. 10-min walk if possible.</div></div>
+    <div class="routine-block"><div class="r-time">9:00 – 10:00 AM</div><div class="r-act">Quick Revision</div><div class="r-note">Revise yesterday's notes while still fresh.</div></div>
+    <div class="routine-block"><div class="r-time">10:00 AM – 1:00 PM</div><div class="r-act">🔥 Power Session 2</div><div class="r-note">50 min study + 10 min break. Deep focus.</div></div>
+    <div class="routine-block"><div class="r-time">1:00 – 3:00 PM</div><div class="r-act">Lunch + Rest</div><div class="r-note">Max 30-min nap. Don't fully sleep.</div></div>
+    <div class="routine-block"><div class="r-time">3:00 – 4:00 PM</div><div class="r-act">Writing Practice</div><div class="r-note">Write answers by hand. Build exam stamina.</div></div>
+    <div class="routine-block"><div class="r-time">4:00 – 6:00 PM</div><div class="r-act">⚡ Power Session 3</div><div class="r-note">Model papers, problem solving, flashcards.</div></div>
+    <div class="routine-block"><div class="r-time">6:00 – 7:30 PM</div><div class="r-act">Break + Dinner</div><div class="r-note">Walk outside. Let your brain reset fully.</div></div>
+    <div class="routine-block"><div class="r-time">7:30 – 9:00 PM</div><div class="r-act">Light Review</div><div class="r-note">Read notes only. No new topics at night.</div></div>
+    <div class="routine-block"><div class="r-time">9:00 PM</div><div class="r-act">😴 Sleep</div><div class="r-note">7–8 hrs sleep beats 2 extra tired study hours.</div></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-motto">YOU CAN DO THIS. 🌟</div>
+  <div class="footer-sub">
+    Karnataka SSLC 2026 · Study Plan · March 2 – April 2, 2026<br>
+    First Exam: March 18 (Kannada) &nbsp;|&nbsp; Last Exam: April 2 (Social Science)<br>
+    6 subjects · 31 days · 1 goal: <strong style="color:#f5c518">1st Class</strong>
+  </div>
+</div>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleCard(card) {
+    const exp = card.querySelector('.expandable');
+    const hint = card.querySelector('.expand-hint');
+    if (!exp) return;
+    if (exp.style.display === 'none') {
+      exp.style.display = 'block';
+      hint.textContent = '▲ tap to collapse';
+      card.style.borderColor = '#f5c518';
+    } else {
+      exp.style.display = 'none';
+      hint.textContent = '▼ tap to expand';
+      card.style.borderColor = '#1e1e2e';
+    }
+  }
+</script>
+</body>
+</html>
